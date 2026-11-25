@@ -13,6 +13,9 @@
 """
 
 import json
+from pathlib import Path
+
+path = str(Path(__file__).resolve().parent / "notes.txt")
 
 # ---------------------------------------------------------------
 # 1. 工具（Tools）：agent 能"动手"的能力
@@ -59,7 +62,7 @@ def fake_llm(messages):
         return {
             "type": "tool_call",
             "tool": "read_file",
-            "args": {"path": "/workspace/agent_tutorial/notes.txt"},
+            "args": {"path": path},
         }
     if len(tool_results) == 1:
         # 决策 2：看到了文件内容（可能是错误），写入笔记
@@ -67,7 +70,7 @@ def fake_llm(messages):
         return {
             "type": "tool_call",
             "tool": "write_file",
-            "args": {"path": "/workspace/agent_tutorial/notes.txt",
+            "args": {"path": path,
                      "content": "第1课：编排层 = 循环 + 决策 + 工具执行 + 结果回灌"},
         }
     # 决策 3：信息够了，输出最终答案
@@ -96,7 +99,7 @@ def run_agent(task: str):
 
         if decision["type"] == "tool_call":
             name, args = decision["tool"], decision["args"]
-            tool = TOOLS.get(name)
+            tool = TOOLS.get(name if isinstance(name, str) else "")
             if tool is None:
                 result = f"错误：未知工具 {name}"
             else:

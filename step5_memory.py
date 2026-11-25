@@ -12,8 +12,10 @@
 """
 
 import json, os, time
+from pathlib import Path
 
-MEMORY_FILE = "/workspace/agent_tutorial/memory_store.json"
+MEMORY_FILE = str(Path(__file__).resolve().parent / "memory_store.json")
+CKPT_FILE = str(Path(__file__).resolve().parent / "checkpoint.json")
 
 # ---------------------------------------------------------------
 # 1. 记忆存储：每条记忆 = 内容 + 标签 + 时间戳
@@ -95,7 +97,7 @@ class Checkpoint:
 
 def demo():
     store = MemoryStore(MEMORY_FILE)
-    ckpt = Checkpoint("/workspace/agent_tutorial/checkpoint.json")
+    ckpt = Checkpoint(CKPT_FILE)
 
     print("== 场景 1: 第 1 次会话（记忆为空，边干活边记）==")
     user_says = [
